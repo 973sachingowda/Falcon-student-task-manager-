@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Falcon student task manager </title>
+
+  
+<style>
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    padding: 20px;
+
+    font-family: Arial, sans-serif;
+
+    background: #eeeeee;
+
+    transition: 0.3s;
+}
+
+
+.app {
+    max-width: 650px;
+
+    margin: auto;
+
+    padding: 25px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.1);
+
+    text-align: center;
+}
+
+
+h1 {
+    margin-top: 0;
+}
+
+
+h2 {
+    margin-bottom: 15px;
+}
+
+
+/* BUTTONS */
+
+button {
+    padding: 11px 15px;
+
+    margin: 5px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+button:active {
+    transform: scale(0.97);
+}
+
+
+/* STATISTICS */
+
+.stats {
+    display: flex;
+
+    gap: 10px;
+
+    margin: 20px 0;
+}
+
+
+.stat-box {
+    flex: 1;
+
+    padding: 15px;
+
+    background: #eeeeee;
+
+    border-radius: 10px;
+}
+
+
+.stat-box strong {
+    display: block;
+
+    font-size: 25px;
+}
+
+
+.stat-box span {
+    font-size: 13px;
+}
+
+
+/* PROGRESS */
+
+.progress-section {
+    padding: 18px;
+
+    margin: 20px 0;
+
+    background: #f2f2f2;
+
+    border-radius: 12px;
+}
+
+
+.progress-bar {
+    width: 100%;
+
+    height: 25px;
+
+    background: #dddddd;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.progress-fill {
+    width: 0%;
+
+    height: 100%;
+
+    background: #4caf50;
+
+    border-radius: 20px;
+
+    transition: width 0.4s;
+}
+
+
+#progressText {
+    font-weight: bold;
+}
+
+
+#progressMessage {
+    font-weight: bold;
+}
+
+
+/* INPUT */
+
+.input-area {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #cccccc;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-family: Arial, sans-serif;
+}
+
+
+textarea {
+    resize: vertical;
+
+    min-height: 70px;
+}
+
+
+#addButton {
+    background: #4caf50;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+/* SEARCH AND FILTER */
+
+#searchInput,
+#filterInput,
+#categoryFilter,
+#sortInput {
+    margin-top: 10px;
+}
+
+
+/* CLEAR */
+
+.clear-button {
+    background: #d9534f;
+
+    color: white;
+
+    margin-top: 12px;
+}
+
+
+/* TASK */
+
+#taskList {
+    padding: 0;
+}
+
+
+li {
+    list-style: none;
+
+    margin: 12px 0;
+
+    padding: 15px;
+
+    background: #f2f2f2;
+
+    border-radius: 12px;
+
+    text-align: left;
+}
+
+
+.task-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.task-name {
+    flex: 1;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.priority {
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+.description {
+    margin-top: 10px;
+
+    padding: 10px;
+
+    background: white;
+
+    border-radius: 8px;
+}
+
+
+.category {
+    margin-top: 8px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+.due-date {
+    margin-top: 7px;
+
+    font-size: 13px;
+}
+
+
+.status {
+    margin-top: 6px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+/* FINAL SUMMARY */
+
+.final-summary {
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: #f2f2f2;
+
+    border-radius: 12px;
+
+    text-align: left;
+}
+
+
+.final-summary h2 {
+    text-align: center;
+}
+
+
+.final-summary p {
+    margin: 10px 0;
+}
+
+
+#summaryMessage {
+    text-align: center;
+
+    font-weight: bold;
+
+    margin-top: 18px;
+}
+
+
+/* UNDO */
+
+.undo-message {
+    display: none;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: #e8f5e9;
+
+    border-radius: 10px;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+/* MODAL */
+
+.modal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.65);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+.modal-box {
+    width: 100%;
+
+    max-width: 430px;
+
+    padding: 25px;
+
+    background: white;
+
+    border-radius: 15px;
+
+    text-align: center;
+}
+
+
+.modal-box input,
+.modal-box textarea,
+.modal-box select {
+    margin: 7px 0;
+}
+
+
+/* DARK MODE */
+
+.dark-mode {
+    background: #1e1e1e;
+
+    color: white;
+}
+
+
+.dark-mode .app {
+    background: #2d2d2d;
+}
+
+
+.dark-mode .stat-box,
+.dark-mode .progress-section,
+.dark-mode li,
+.dark-mode .final-summary {
+    background: #3a3a3a;
+}
+
+
+.dark-mode .description {
+    background: #444444;
+}
+
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+    background: #444444;
+
+    color: white;
+
+    border-color: #666666;
+}
+
+
+.dark-mode .modal-box {
+    background: #2d2d2d;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px;
+    }
+
+
+    .app {
+        padding: 18px;
+    }
+
+
+    h1 {
+        font-size: 24px;
+    }
+
+
+    .stat-box {
+        padding: 10px 5px;
+    }
+
+
+    .stat-box strong {
+        font-size: 20px;
+    }
+
+
+    .stat-box span {
+        font-size: 10px;
+    }
+
+
+    .task-row {
+        flex-wrap: wrap;
+    }
+
+}
+.backup-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f2f2f2;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.backup-section h2 {
+    margin-bottom: 10px;
+}
+
+.backup-section button {
+    margin: 5px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#backupMessage {
+    margin-top: 15px;
+    font-weight: bold;
+}
+.backup-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f2f2f2;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.backup-section h2 {
+    margin-bottom: 10px;
+}
+
+.backup-section button {
+    margin: 5px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#backupMessage {
+    margin-top: 15px;
+    font-weight: bold;
+}
+</style>
+</head>
+    
+  <body>
+  <div class="app">
+
+    <h1>🎓 Student Task Manager</h1>
+
+    <button id="themeButton" onclick="toggleDarkMode()">
+        🌙 Dark Mode
+    </button>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat-box">
+            <strong id="totalTasks">0</strong>
+            <span>Total</span>
+        </div>
+
+        <div class="stat-box">
+            <strong id="completedTasks">0</strong>
+            <span>Completed</span>
+        </div>
+
+        <div class="stat-box">
+            <strong id="pendingTasks">0</strong>
+            <span>Pending</span>
+        </div>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-section">
+
+        <h2>📊 Your Progress</h2>
+
+        <div class="progress-bar">
+            <div id="progressFill"
+                 class="progress-fill">
+            </div>
+        </div>
+
+        <p id="progressText">
+            0% Completed — 0 / 0 Tasks
+        </p>
+
+        <p id="progressMessage">
+            🚀 Start completing your tasks!
+        </p>
+
+    </div>
+
+
+    <!-- ADD TASK -->
+
+    <div class="input-area">
+
+        <input
+            id="taskInput"
+            type="text"
+            placeholder="Enter your task">
+
+
+        <textarea
+            id="descriptionInput"
+            placeholder="📝 Task description">
+        </textarea>
+
+
+        <select id="priorityInput">
+
+            <option value="High">
+                🔴 High
+            </option>
+
+            <option value="Medium" selected>
+                🟡 Medium
+            </option>
+
+            <option value="Low">
+                🟢 Low
+            </option>
+
+        </select>
+
+
+        <select id="categoryInput">
+
+            <option value="Study">
+                📚 Study
+            </option>
+
+            <option value="Programming">
+                💻 Programming
+            </option>
+
+            <option value="Assignment">
+                📝 Assignment
+            </option>
+
+            <option value="College">
+                🏫 College
+            </option>
+
+            <option value="Personal">
+                🎯 Personal
+            </option>
+
+        </select>
+
+
+        <input
+            id="dateInput"
+            type="date">
+
+
+        <button
+            id="addButton"
+            onclick="addTask()">
+
+            ➕ ADD TASK
+
+        </button>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <input
+        id="searchInput"
+        type="text"
+        placeholder="🔍 Search your tasks..."
+        oninput="displayTasks()">
+
+
+    <!-- FILTER -->
+
+    <select
+        id="filterInput"
+        onchange="displayTasks()">
+
+        <option value="All">
+            📋 All Tasks
+        </option>
+
+        <option value="High">
+            🔴 High Priority
+        </option>
+
+        <option value="Medium">
+            🟡 Medium Priority
+        </option>
+
+        <option value="Low">
+            🟢 Low Priority
+        </option>
+
+        <option value="Overdue">
+            ⚠️ Overdue
+        </option>
+
+        <option value="Today">
+            🔥 Due Today
+        </option>
+
+        <option value="Upcoming">
+            📅 Upcoming
+        </option>
+
+    </select>
+
+
+    <!-- CATEGORY FILTER -->
+
+    <select
+        id="categoryFilter"
+        onchange="displayTasks()">
+
+        <option value="All">
+            📋 All Categories
+        </option>
+
+        <option value="Study">
+            📚 Study
+        </option>
+
+        <option value="Programming">
+            💻 Programming
+        </option>
+
+        <option value="Assignment">
+            📝 Assignment
+        </option>
+
+        <option value="College">
+            🏫 College
+        </option>
+
+        <option value="Personal">
+            🎯 Personal
+        </option>
+
+    </select>
+
+
+    <!-- SORT -->
+
+    <select
+        id="sortInput"
+        onchange="displayTasks()">
+
+        <option value="Default">
+            📋 Default Order
+        </option>
+
+        <option value="Priority">
+            🔴 High → Low Priority
+        </option>
+
+        <option value="Date">
+            📅 Nearest Due Date
+        </option>
+
+        <option value="Status">
+            ⏳ Pending → Completed
+        </option>
+
+        <option value="Newest">
+            🆕 Newest → Oldest
+        </option>
+
+    </select>
+
+
+    <!-- CLEAR ALL -->
+
+    <button
+        class="clear-button"
+        onclick="clearAllTasks()">
+
+        🗑️ Clear All
+
+    </button>
+
+
+    <!-- TASK LIST -->
+
+    <h2>My Tasks</h2>
+
+    <ul id="taskList"></ul>
+
+
+    <!-- FINAL SUMMARY -->
+
+    <div class="final-summary">
+
+        <h2>📋 Final Summary</h2>
+
+        <p>
+            Total Tasks:
+            <strong id="summaryTotal">0</strong>
+        </p>
+
+        <p>
+            Completed:
+            <strong id="summaryCompleted">0</strong>
+        </p>
+
+        <p>
+            Pending:
+            <strong id="summaryPending">0</strong>
+        </p>
+
+        <p>
+            🎯 Completion Rate:
+            <strong id="summaryPercentage">
+                0%
+            </strong>
+        </p>
+
+        <p id="summaryMessage">
+            🚀 Start completing your tasks!
+        </p>
+
+    </div>
+
+
+    <!-- UNDO -->
+
+    <div
+        id="undoMessage"
+        class="undo-message">
+
+        <span id="undoText">
+            Task completed!
+        </span>
+
+        <button onclick="undoTask()">
+            ↩️ UNDO
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- EDIT WINDOW -->
+
+<div
+    id="editModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <h2>✏️ Edit Task</h2>
+
+        <input
+            id="editTaskInput"
+            type="text"
+            placeholder="Task name">
+
+
+        <textarea
+            id="editDescriptionInput"
+            placeholder="📝 Description">
+        </textarea>
+
+
+        <select id="editPriorityInput">
+
+            <option value="High">
+                🔴 High
+            </option>
+
+            <option value="Medium">
+                🟡 Medium
+            </option>
+
+            <option value="Low">
+                🟢 Low
+            </option>
+
+        </select>
+
+
+        <select id="editCategoryInput">
+
+            <option value="Study">
+                📚 Study
+            </option>
+
+            <option value="Programming">
+                💻 Programming
+            </option>
+
+            <option value="Assignment">
+                📝 Assignment
+            </option>
+
+            <option value="College">
+                🏫 College
+            </option>
+
+            <option value="Personal">
+                🎯 Personal
+            </option>
+
+        </select>
+
+
+        <input
+            id="editDateInput"
+            type="date">
+
+
+        <button onclick="saveEditedTask()">
+            💾 SAVE
+        </button>
+
+        <button onclick="closeEditModal()">
+            ❌ CANCEL
+        </button>
+
+    </div>
+
+</div>
+<div class="backup-section">
+
+    <h2>💾 Backup & Restore</h2>
+
+    <p>
+        Save your tasks safely or restore them later.
+    </p>
+
+    <button onclick="exportTasks()">
+        📥 Backup Tasks
+    </button>
+
+    <button onclick="document.getElementById('importFile').click()">
+        📤 Restore Tasks
+    </button>
+
+    <input
+        type="file"
+        id="importFile"
+        accept=".json"
+        onchange="importTasks(event)"
+        style="display:none;"
+    >
+
+    <p id="backupMessage">
+        🔒 Your tasks are stored safely.
+    </p>
+
+</div>
+
+  
+<script>
+let tasks =
+    JSON.parse(
+        localStorage.getItem("studentTasks")
+    ) || [];
+
+let editingIndex = -1;
+
+let lastCompletedIndex = -1;
+
+
+// ==============================
+// SAVE
+// ==============================
+
+function saveTasks() {
+
+    localStorage.setItem(
+        "studentTasks",
+        JSON.stringify(tasks)
+    );
+
+}
+
+
+// ==============================
+// ADD TASK
+// ==============================
+
+function addTask() {
+
+    const name =
+        document
+        .getElementById("taskInput")
+        .value
+        .trim();
+
+
+    const description =
+        document
+        .getElementById("descriptionInput")
+        .value
+        .trim();
+
+
+    const priority =
+        document
+        .getElementById("priorityInput")
+        .value;
+
+
+    const category =
+        document
+        .getElementById("categoryInput")
+        .value;
+
+
+    const dueDate =
+        document
+        .getElementById("dateInput")
+        .value;
+
+
+    if (name === "") {
+
+        alert("Please enter a task!");
+
+        return;
+
+    }
+
+
+    tasks.push({
+
+        name: name,
+
+        description: description,
+
+        priority: priority,
+
+        category: category,
+
+        dueDate: dueDate,
+
+        completed: false
+
+    });
+
+
+    saveTasks();
+
+
+    document.getElementById(
+        "taskInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "descriptionInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "dateInput"
+    ).value = "";
+
+
+    displayTasks();
+
+}
+
+
+// ==============================
+// DISPLAY TASKS
+// ==============================
+
+function displayTasks() {
+
+    const list =
+        document.getElementById(
+            "taskList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    tasks.forEach(
+        function(task, index) {
+
+            const li =
+                document.createElement(
+                    "li"
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "task-row";
+
+
+            const name =
+                document.createElement(
+                    "span"
+                );
+
+
+            name.className =
+                "task-name";
+
+
+            name.innerText =
+                task.completed
+                ? "☑ " + task.name
+                : "☐ " + task.name;
+
+
+            name.onclick =
+                function() {
+
+                    task.completed =
+                        !task.completed;
+
+
+                    saveTasks();
+
+
+                    displayTasks();
+
+
+                    if (
+                        task.completed
+                    ) {
+
+                        showUndoMessage(
+                            index
+                        );
+
+                    }
+
+                };
+
+
+            const priority =
+                document.createElement(
+                    "span"
+                );
+
+
+            priority.className =
+                "priority";
+
+
+            priority.innerText =
+                getPriorityIcon(
+                    task.priority
+                ) +
+                " " +
+                task.priority;
+
+
+            const edit =
+                document.createElement(
+                    "button"
+                );
+
+
+            edit.innerText = "✏️";
+
+
+            edit.onclick =
+                function() {
+
+                    openEditModal(
+                        index
+                    );
+
+                };
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.innerText =
+                "🗑️";
+
+
+            deleteButton.onclick =
+                function() {
+
+                    if (
+                        confirm(
+                            "Delete this task?"
+                        )
+                    ) {
+
+                        tasks.splice(
+                            index,
+                            1
+                        );
+
+
+                        saveTasks();
+
+                        displayTasks();
+
+                    }
+
+                };
+
+
+            row.appendChild(name);
+
+            row.appendChild(priority);
+
+            row.appendChild(edit);
+
+            row.appendChild(
+                deleteButton
+            );
+
+
+            li.appendChild(row);
+
+
+            if (
+                task.description
+            ) {
+
+                const description =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                description.className =
+                    "description";
+
+
+                description.innerText =
+                    "📝 " +
+                    task.description;
+
+
+                li.appendChild(
+                    description
+                );
+
+            }
+
+
+            const category =
+                document.createElement(
+                    "div"
+                );
+
+
+            category.className =
+                "category";
+
+
+            category.innerText =
+                "📚 " +
+                task.category;
+
+
+            li.appendChild(
+                category
+            );
+
+
+            const date =
+                document.createElement(
+                    "div"
+                );
+
+
+            date.className =
+                "due-date";
+
+
+            date.innerText =
+                task.dueDate
+                ? "📅 Due: " +
+                  task.dueDate
+                : "📅 No due date";
+
+
+            li.appendChild(date);
+
+
+            list.appendChild(li);
+
+        }
+    );
+
+
+    updateStats();
+
+}
+
+
+// ==============================
+// STATISTICS
+// ==============================
+
+function updateStats() {
+
+    const total =
+        tasks.length;
+
+
+    const completed =
+        tasks.filter(
+            function(task) {
+
+                return task.completed;
+
+            }
+        ).length;
+
+
+    const pending =
+        total - completed;
+
+
+    // TOP STATISTICS
+
+    document.getElementById(
+        "totalTasks"
+    ).innerText = total;
+
+
+    document.getElementById(
+        "completedTasks"
+    ).innerText = completed;
+
+
+    document.getElementById(
+        "pendingTasks"
+    ).innerText = pending;
+
+
+    // PERCENTAGE
+
+    let percentage = 0;
+
+
+    if (total > 0) {
+
+        percentage =
+            Math.round(
+                (completed / total) * 100
+            );
+
+    }
+
+
+    // PROGRESS BAR
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        percentage + "%";
+
+
+    document.getElementById(
+        "progressText"
+    ).innerText =
+        percentage +
+        "% Completed — " +
+        completed +
+        " / " +
+        total +
+        " Tasks";
+
+
+    // PROGRESS MESSAGE
+
+    const progressMessage =
+        document.getElementById(
+            "progressMessage"
+        );
+
+
+    if (total === 0) {
+
+        progressMessage.innerText =
+            "🚀 Start completing your tasks!";
+
+    }
+
+    else if (
+        percentage === 100
+    ) {
+
+        progressMessage.innerText =
+            "🏆 Amazing! All tasks completed!";
+
+    }
+
+    else if (
+        percentage >= 75
+    ) {
+
+        progressMessage.innerText =
+            "🔥 Great work! Almost finished!";
+
+    }
+
+    else if (
+        percentage >= 50
+    ) {
+
+        progressMessage.innerText =
+            "💪 Good progress! Keep going!";
+
+    }
+
+    else {
+
+        progressMessage.innerText =
+            "🌱 Good start! Keep working!";
+
+    }
+
+
+    // ==============================
+    // FINAL SUMMARY
+    // ==============================
+
+    document.getElementById(
+        "summaryTotal"
+    ).innerText =
+        total;
+
+
+    document.getElementById(
+        "summaryCompleted"
+    ).innerText =
+        completed;
+
+
+    document.getElementById(
+        "summaryPending"
+    ).innerText =
+        pending;
+
+
+    document.getElementById(
+        "summaryPercentage"
+    ).innerText =
+        percentage + "%";
+
+
+    const summaryMessage =
+        document.getElementById(
+            "summaryMessage"
+        );
+
+
+    if (total === 0) {
+
+        summaryMessage.innerText =
+            "🚀 Start completing your tasks!";
+
+    }
+
+    else if (
+        percentage === 100
+    ) {
+
+        summaryMessage.innerText =
+            "🏆 Excellent! All tasks completed!";
+
+    }
+
+    else if (
+        percentage >= 75
+    ) {
+
+        summaryMessage.innerText =
+            "🔥 Great work! You are almost done!";
+
+    }
+
+    else if (
+        percentage >= 50
+    ) {
+
+        summaryMessage.innerText =
+            "💪 Good progress! Keep going!";
+
+    }
+
+    else {
+
+        summaryMessage.innerText =
+            "🌱 Good start! Keep working!";
+
+    }
+
+}
+
+
+// ==============================
+// PRIORITY ICON
+// ==============================
+
+function getPriorityIcon(
+    priority
+) {
+
+    if (
+        priority === "High"
+    ) {
+
+        return "🔴";
+
+    }
+
+
+    if (
+        priority === "Low"
+    ) {
+
+        return "🟢";
+
+    }
+
+
+    return "🟡";
+
+}
+
+
+// ==============================
+// UNDO
+// ==============================
+
+function showUndoMessage(
+    index
+) {
+
+    lastCompletedIndex =
+        index;
+
+
+    document.getElementById(
+        "undoText"
+    ).innerText =
+        "✅ " +
+        tasks[index].name +
+        " completed!";
+
+
+    document.getElementById(
+        "undoMessage"
+    ).style.display =
+        "flex";
+
+}
+
+
+function undoTask() {
+
+    if (
+        lastCompletedIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    tasks[
+        lastCompletedIndex
+    ].completed = false;
+
+
+    saveTasks();
+
+
+    displayTasks();
+
+
+    document.getElementById(
+        "undoMessage"
+    ).style.display =
+        "none";
+
+
+    lastCompletedIndex = -1;
+
+}
+
+
+// ==============================
+// EDIT TASK
+// ==============================
+
+function openEditModal(
+    index
+) {
+
+    editingIndex = index;
+
+
+    const task =
+        tasks[index];
+
+
+    document.getElementById(
+        "editTaskInput"
+    ).value =
+        task.name;
+
+
+    document.getElementById(
+        "editDescriptionInput"
+    ).value =
+        task.description;
+
+
+    document.getElementById(
+        "editPriorityInput"
+    ).value =
+        task.priority;
+
+
+    document.getElementById(
+        "editCategoryInput"
+    ).value =
+        task.category;
+
+
+    document.getElementById(
+        "editDateInput"
+    ).value =
+        task.dueDate;
+
+
+    document.getElementById(
+        "editModal"
+    ).style.display =
+        "flex";
+
+}
+
+
+function saveEditedTask() {
+
+    if (
+        editingIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById(
+            "editTaskInput"
+        ).value.trim();
+
+
+    if (name === "") {
+
+        alert(
+            "Task name cannot be empty!"
+        );
+
+        return;
+
+    }
+
+
+    tasks[editingIndex].name =
+        name;
+
+
+    tasks[editingIndex].description =
+        document.getElementById(
+            "editDescriptionInput"
+        ).value.trim();
+
+
+    tasks[editingIndex].priority =
+        document.getElementById(
+            "editPriorityInput"
+        ).value;
+
+
+    tasks[editingIndex].category =
+        document.getElementById(
+            "editCategoryInput"
+        ).value;
+
+
+    tasks[editingIndex].dueDate =
+        document.getElementById(
+            "editDateInput"
+        ).value;
+
+
+    saveTasks();
+
+
+    closeEditModal();
+
+
+    displayTasks();
+
+}
+
+
+function closeEditModal() {
+
+    document.getElementById(
+        "editModal"
+    ).style.display =
+        "none";
+
+
+    editingIndex = -1;
+
+}
+
+
+// ==============================
+// CLEAR ALL
+// ==============================
+
+function clearAllTasks() {
+
+    if (
+        tasks.length === 0
+    ) {
+
+        alert(
+            "No tasks to delete."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        confirm(
+            "Delete all tasks?"
+        )
+    ) {
+
+        tasks = [];
+
+
+        saveTasks();
+
+
+        displayTasks();
+
+    }
+
+}
+
+
+// ==============================
+// DARK MODE
+// ==============================
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle(
+        "dark-mode"
+    );
+
+
+    const button =
+        document.getElementById(
+            "themeButton"
+        );
+
+
+    if (
+        document.body.classList.contains(
+            "dark-mode"
+        )
+    ) {
+
+        button.innerText =
+            "☀️ Light Mode";
+
+    }
+
+    else {
+
+        button.innerText =
+            "🌙 Dark Mode";
+
+    }
+
+}
+
+
+// ==============================
+// START
+// ==============================
+
+displayTasks();
+// ==============================
+// BACKUP TASKS
+// ==============================
+
+function exportTasks() {
+
+    if (tasks.length === 0) {
+
+        alert("There are no tasks to backup!");
+
+        return;
+    }
+
+
+    const data =
+        JSON.stringify(tasks, null, 2);
+
+
+    const blob =
+        new Blob(
+            [data],
+            {
+                type: "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "student-task-manager-backup.json";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+
+    document.getElementById(
+        "backupMessage"
+    ).innerText =
+        "✅ Backup downloaded successfully!";
+}
+
+
+// ==============================
+// RESTORE TASKS
+// ==============================
+
+function importTasks(event) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            try {
+
+                const importedTasks =
+                    JSON.parse(
+                        e.target.result
+                    );
+
+
+                if (
+                    !Array.isArray(
+                        importedTasks
+                    )
+                ) {
+
+                    alert(
+                        "Invalid backup file!"
+                    );
+
+                    return;
+                }
+
+
+                tasks =
+                    importedTasks;
+
+
+                saveTasks();
+
+
+                displayTasks();
+
+
+                document.getElementById(
+                    "backupMessage"
+                ).innerText =
+                    "✅ Tasks restored successfully!";
+
+
+            }
+
+            catch (error) {
+
+                alert(
+                    "Unable to restore this file!"
+                );
+
+            }
+
+        };
+
+
+    reader.readAsText(file);
+
+}
+// ==============================
+// BACKUP TASKS
+// ==============================
+
+function exportTasks() {
+
+    if (tasks.length === 0) {
+
+        alert("There are no tasks to backup!");
+
+        return;
+    }
+
+    const data =
+        JSON.stringify(tasks, null, 2);
+
+    const blob =
+        new Blob(
+            [data],
+            {
+                type: "application/json"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "student-task-manager-backup.json";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    document.getElementById(
+        "backupMessage"
+    ).innerText =
+        "✅ Backup downloaded successfully!";
+}
+
+
+// ==============================
+// RESTORE TASKS
+// ==============================
+
+function importTasks(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const reader =
+        new FileReader();
+
+    reader.onload =
+        function(e) {
+
+            try {
+
+                const importedTasks =
+                    JSON.parse(
+                        e.target.result
+                    );
+
+                if (
+                    !Array.isArray(
+                        importedTasks
+                    )
+                ) {
+
+                    alert(
+                        "Invalid backup file!"
+                    );
+
+                    return;
+                }
+
+                tasks =
+                    importedTasks;
+
+                saveTasks();
+
+                displayTasks();
+
+                document.getElementById(
+                    "backupMessage"
+                ).innerText =
+                    "✅ Tasks restored successfully!";
+
+            }
+
+            catch (error) {
+
+                alert(
+                    "Unable to restore this file!"
+                );
+
+            }
+
+        };
+
+    reader.readAsText(file);
+}
+</script>
+</body>
+  
+</html>
